@@ -10,6 +10,8 @@ class Spree::UserPasswordsController < Devise::PasswordsController
 
   ssl_required
 
+  layout Refinery::Themes::Theme.default_layout
+
   # Overridden due to bug in Devise.
   #   respond_with resource, :location => new_session_path(resource_name)
   # is generating bad url /session/new.user

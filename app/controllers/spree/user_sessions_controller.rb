@@ -10,20 +10,31 @@ class Spree::UserSessionsController < Devise::SessionsController
   ssl_required :new, :create, :destroy, :update
   ssl_allowed :login_bar
 
+  layout Refinery::Themes::Theme.default_layout
+
   # GET /resource/sign_in
   def new
     @user = Refinery::User.new
-    #super
+    super
   end
 
-  def create
-    authenticate_user!
+  #def create
+  #  super
+  #rescue ::BCrypt::Errors::InvalidSalt, ::BCrypt::Errors::InvalidHash
+  #  flash[:error] = t('password_encryption', :scope => 'refinery.users.forgot')
+  #  redirect_to refinery.new_refinery_user_password_path
+  #end
 
-    if user_signed_in?
+
+  def create
+    #super
+    authenticate_refinery_user!
+
+    if refinery_user_signed_in?
       respond_to do |format|
         format.html {
           flash[:success] = t(:logged_in_succesfully)
-          redirect_back_or_default(after_sign_in_path_for(spree_current_user))
+          redirect_back_or_default(after_sign_in_path_for(current_refinery_user))
         }
         format.js {
           user = resource.record
