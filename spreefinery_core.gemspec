@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.required_ruby_version = '>= 1.9.3'
 
-  gem.add_dependency 'spree', '>= 1.3.0'
+  gem.add_dependency 'spree', '>= 1.3.2'
   gem.add_dependency 'spree_i18n'
 
   gem.add_dependency 'refinerycms', '>= 2.0.9'

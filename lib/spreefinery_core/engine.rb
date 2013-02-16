@@ -11,7 +11,7 @@ module SpreefineryCore
     config.autoload_paths += %W(#{config.root}/lib)
 
     config.to_prepare do
-      Spree.user_class = "Refinery::User"
+      #Spree.user_class = "Refinery::User"
 
       WillPaginate::ActiveRecord::RelationMethods.send :alias_method, :per, :per_page
       WillPaginate::ActiveRecord::RelationMethods.send :alias_method, :num_pages, :total_pages
