@@ -1,5 +1,14 @@
 Refinery::User.class_eval do
 
+  has_many :orders, :class_name => 'Spree::Order'
+  belongs_to :ship_address, :foreign_key => 'ship_address_id', :class_name => 'Spree::Address'
+  belongs_to :bill_address, :foreign_key => 'bill_address_id', :class_name => 'Spree::Address'
+
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :plugins, :login,
+                  :ship_address_id, :bill_address_id
+
+  before_destroy :check_completed_orders
+
   users_table_name = Refinery::User.table_name
   scope :registered, where("#{users_table_name}.email NOT LIKE ?", "%@example.net")
 
@@ -26,17 +35,6 @@ Refinery::User.class_eval do
 
   def check_completed_orders
     raise DestroyWithOrdersError if orders.complete.present?
-  end
-
-  def check_admin
-    return if self.class.admin_created?
-    admin_role = Spree::Role.find_or_create_by_name 'admin'
-    self.spree_roles << admin_role
-  end
-
-  def set_login
-    # for now force login to be same as email, eventually we will make this configurable, etc.
-    self.login ||= self.email if self.email
   end
 
   # Generate a friendly string randomically to be used as token.
