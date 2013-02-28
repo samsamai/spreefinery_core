@@ -22,14 +22,19 @@ class Spree::UserSessionsController < Devise::SessionsController
     authenticate_refinery_user!
 
     if refinery_user_signed_in?
+      if current_order
+        current_order.email = spree_current_user.email
+        current_order.next
+      end
+
       respond_to do |format|
         format.html {
           flash[:success] = t(:logged_in_succesfully)
-          redirect_back_or_default(after_sign_in_path_for(current_refinery_user))
+          redirect_back_or_default(after_sign_in_path_for(spree_current_user))
         }
         format.js {
-          render :json => {:ship_address => current_refinery_user.ship_address,
-                           :bill_address => current_refinery_user.bill_address}.to_json
+          render :json => {:ship_address => spree_current_user.ship_address,
+                           :bill_address => spree_current_user.bill_address}.to_json
         }
       end
     else
@@ -56,8 +61,8 @@ class Spree::UserSessionsController < Devise::SessionsController
     t(:login)
   end
 
-  def redirect_back_or_default(default)
-    redirect_to(session["user_return_to"] || default)
-    session["user_return_to"] = nil
+  def after_sign_in_path_for(resource)
+    request.env['omniauth.origin'] || stored_location_for(resource) || root_path
   end
+
 end

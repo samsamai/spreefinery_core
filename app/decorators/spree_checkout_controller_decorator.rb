@@ -5,7 +5,8 @@ Spree::CheckoutController.class_eval do
 
 
   def registration
-    @user = Refinery::User.new
+    @user ||= Refinery::User.new
+    session[:user_return_to] = checkout_path
   end
 
   def update_registration
@@ -29,14 +30,15 @@ Spree::CheckoutController.class_eval do
   # Introduces a registration step whenever the +registration_step+ preference is true.
   def check_registration
     return unless ::Refinery::Setting.find_or_set(:registration_step, true)
-    return if current_refinery_user or current_order.email
+    return if spree_current_user or current_order.email
     redirect_to spree.checkout_registration_path
   end
 
   # Overrides the equivalent method defined in Spree::Core.  This variation of the method will ensure that users
   # are redirected to the tokenized order url unless authenticated as a registered user.
   def completion_route
-    return order_path(@order) if current_refinery_user
+    return order_path(@order) if spree_current_user
     spree.token_order_path(@order, @order.token)
   end
+
 end
