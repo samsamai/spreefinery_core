@@ -18,6 +18,7 @@ Spree::Core::Engine.routes.prepend do
 
   match '/checkout/registration' => 'checkout#registration', :via => :get, :as => :checkout_registration
   match '/checkout/registration' => 'checkout#update_registration', :via => :put, :as => :update_checkout_registration
+  match '/checkout/sign_up' => 'checkout#sign_up', :via => :put, :as => :checkout_sign_up
 
   match '/states/by_country', :to => 'states#by_country', :via => :get
 
