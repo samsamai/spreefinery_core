@@ -1,7 +1,7 @@
 Spree::CheckoutController.class_eval do
   respond_to :html, :json
 
-  before_filter :check_registration, :except => [:registration, :update_registration]
+  before_filter :check_registration, :except => [:sign_up, :registration, :update_registration]
 
 
   def registration
